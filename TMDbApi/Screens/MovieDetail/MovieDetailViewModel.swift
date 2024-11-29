@@ -15,13 +15,18 @@ class MovieDetailsViewModel: ObservableObject {
     @Published var movieDetails: MovieDetailsModel?
     @Published var movieID: Int
     @Published var isLoading = false
-    private let cacheManager = CacheManager()
+    let cacheManager: CacheManager!
     private let movieDetailsService: MovieDetailsServiceable
     private var cancellables = Set<AnyCancellable>()
     
-    init(movieID: Int, movieDetailsService: MovieDetailsServiceable = MovieDetailsService()) {
+    init(movieID: Int, movieDetailsService: MovieDetailsServiceable = MovieDetailsService(), cacheManager: CacheManager = CacheManager()) {
         self.movieID = movieID
         self.movieDetailsService = movieDetailsService
+        self.cacheManager = cacheManager
+        onAppear()
+    }
+    
+    func onAppear() {
         loadCachedMovieDetails()
     }
 }

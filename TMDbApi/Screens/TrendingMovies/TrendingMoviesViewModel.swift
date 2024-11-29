@@ -22,14 +22,15 @@ class TrendingMoviesViewModel: ObservableObject {
     @Published var pageNumber = 1
     @Published var isPagination = true
     private let responsePerPage = 20
-    private let cacheManager = CacheManager()
+    let cacheManager: CacheManager!
     private let genresCacheKey = "genres"
     private let trendingMoviesCacheKey = "trendingMovies"
     private let trendingMoviesService: TrendingMoviesServiceable
     private var cancellables = Set<AnyCancellable>()
     
-    init(trendingMoviesService: TrendingMoviesServiceable = TrendingMoviesService()) {
+    init(trendingMoviesService: TrendingMoviesServiceable = TrendingMoviesService(), cacheManager: CacheManager = CacheManager()) {
         self.trendingMoviesService = trendingMoviesService
+        self.cacheManager = cacheManager
     }
     
     func onAppear() {
