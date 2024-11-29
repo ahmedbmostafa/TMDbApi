@@ -22,6 +22,9 @@ class TrendingMoviesViewModel: ObservableObject {
     @Published var pageNumber = 1
     @Published var isPagination = true
     private let responsePerPage = 20
+    private let cacheManager = CacheManager()
+    private let genresCacheKey = "genres"
+    private let trendingMoviesCacheKey = "trendingMovies"
     private let trendingMoviesService: TrendingMoviesServiceable
     private var cancellables = Set<AnyCancellable>()
     
@@ -31,14 +34,24 @@ class TrendingMoviesViewModel: ObservableObject {
     
     func onAppear() {
         resetFlags()
-        getGenres()
-        getTrendingMovies()
+        loadCachedGenres()
+        loadCachedMovies()
     }
 }
 
 // MARK: - Genres
 
 extension TrendingMoviesViewModel {
+    private func loadCachedGenres() {
+        if let cachedGenres = cacheManager.loadFromCache(forKey: genresCacheKey, as: [GenreModel].self) {
+            genres = cachedGenres
+            print("genres=", genres.count)
+            print("cachedGenres")
+        } else {
+            getGenres()
+        }
+    }
+    
     private func getGenres() {
         let response: AnyPublisher<GenresModel, APIError> = trendingMoviesService.getGenres()
         response
@@ -55,6 +68,7 @@ extension TrendingMoviesViewModel {
     private func onReceiveGenresModelResponse(_ response: GenresModel) {
         let data = response.genres
         genres = data
+        cacheManager.saveToCache(genres, forKey: genresCacheKey)
         print("genres=", genres.count)
     }
 }
@@ -66,10 +80,25 @@ extension TrendingMoviesViewModel {
         guard trendingMovies.count >= responsePerPage else {return}
         guard let index = trendingMovies.firstIndex(where: { ($0.id) == (currentMovie.id) }) else {return}
         if index == trendingMovies.count-1 && isPagination == true {
-            pageNumber += 1
+            let uniqueMovies = trendingMovies.uniqued(by: \.id)
+            let calculatedPage = (uniqueMovies.count / responsePerPage) + 1
+            if pageNumber != calculatedPage {
+                pageNumber = calculatedPage
+            }
             getTrendingMovies()
         }
     }
+    
+    private func loadCachedMovies() {
+           if let cachedMovies = cacheManager.loadFromCache(forKey: trendingMoviesCacheKey, as: [TrendingMovieModel].self) {
+               trendingMovies = cachedMovies.uniqued(by: \.id)
+               updateFilteredMovies()
+               print("trendingMovies=", trendingMovies.count)
+               print("cachedMovies")
+           } else {
+               getTrendingMovies()
+           }
+       }
     
     private func getTrendingMovies() {
         let response: AnyPublisher<TrendingMoviesModel, APIError> = trendingMoviesService.getTrendingMovies(page: pageNumber)
@@ -83,7 +112,9 @@ extension TrendingMoviesViewModel {
         if data.count < responsePerPage {
             isPagination = false
         }
-        pageNumber != 1 ? (trendingMovies += data) : (trendingMovies = data)
+        trendingMovies += data
+        trendingMovies = trendingMovies.uniqued(by: \.id)
+        cacheManager.saveToCache(trendingMovies, forKey: trendingMoviesCacheKey)
         print("trendingMovies=", trendingMovies.count)
         updateFilteredMovies()
     }
@@ -96,6 +127,7 @@ extension TrendingMoviesViewModel {
     }
     
     func updateFilteredMovies() {
+        searchResults = []
         if searchText.isEmpty && selectedGenreID == nil {
             // No search or genre filter applied, show all movies
             searchResults = trendingMovies

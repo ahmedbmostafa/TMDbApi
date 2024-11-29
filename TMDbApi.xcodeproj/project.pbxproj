@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E64239C22CFA083000E93C8D /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64239C12CFA083000E93C8D /* CacheManager.swift */; };
+		E64239C42CFA0B5700E93C8D /* Array+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64239C32CFA0B5700E93C8D /* Array+Ex.swift */; };
 		E67E290C2CF90A38003A375B /* AppRouterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67E290B2CF90A38003A375B /* AppRouterView.swift */; };
 		E67E290E2CF90A43003A375B /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67E290D2CF90A43003A375B /* AppRouter.swift */; };
 		E67E29102CF90A50003A375B /* AppRouterEx+Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67E290F2CF90A50003A375B /* AppRouterEx+Route.swift */; };
@@ -44,6 +46,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E64239C12CFA083000E93C8D /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CacheManager.swift; path = ../../../../CacheManager.swift; sourceTree = "<group>"; };
+		E64239C32CFA0B5700E93C8D /* Array+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Array+Ex.swift"; path = "../../../Array+Ex.swift"; sourceTree = "<group>"; };
 		E67E290B2CF90A38003A375B /* AppRouterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterView.swift; sourceTree = "<group>"; };
 		E67E290D2CF90A43003A375B /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		E67E290F2CF90A50003A375B /* AppRouterEx+Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRouterEx+Route.swift"; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				E67E291F2CF91110003A375B /* Font+App.swift */,
 				E67E29332CF93FC5003A375B /* String+Ex.swift */,
 				E67E29352CF942EC003A375B /* View+Ex.swift */,
+				E64239C32CFA0B5700E93C8D /* Array+Ex.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -216,6 +221,7 @@
 		E6CF6A082CF7BEC80066F1BD /* Local */ = {
 			isa = PBXGroup;
 			children = (
+				E64239C12CFA083000E93C8D /* CacheManager.swift */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -367,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E64239C42CFA0B5700E93C8D /* Array+Ex.swift in Sources */,
 				E67E29152CF90B7C003A375B /* MovieDetailView.swift in Sources */,
 				E67E29362CF942EC003A375B /* View+Ex.swift in Sources */,
 				E67E29182CF90D1B003A375B /* SplashView.swift in Sources */,
@@ -377,6 +384,7 @@
 				E67E29202CF91110003A375B /* Font+App.swift in Sources */,
 				E67E29302CF93EBF003A375B /* MovieGridView.swift in Sources */,
 				E6CF6A1A2CF7C0A70066F1BD /* GlobalFunctions.swift in Sources */,
+				E64239C22CFA083000E93C8D /* CacheManager.swift in Sources */,
 				E67E29342CF93FC5003A375B /* String+Ex.swift in Sources */,
 				E67E291E2CF91105003A375B /* Color+App.swift in Sources */,
 				E6CF6A0E2CF7BFA20066F1BD /* TrendingMoviesService.swift in Sources */,

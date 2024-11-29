@@ -14,20 +14,33 @@ class MovieDetailsViewModel: ObservableObject {
     
     @Published var movieDetails: MovieDetailsModel?
     @Published var movieID: Int
+    @Published var isLoading = false
+    private let cacheManager = CacheManager()
     private let movieDetailsService: MovieDetailsServiceable
     private var cancellables = Set<AnyCancellable>()
     
     init(movieID: Int, movieDetailsService: MovieDetailsServiceable = MovieDetailsService()) {
         self.movieID = movieID
         self.movieDetailsService = movieDetailsService
-        getMovieDetails()
+        loadCachedMovieDetails()
     }
 }
 
 // MARK: - MovieDetails
 
 extension MovieDetailsViewModel {
+    private func loadCachedMovieDetails() {
+        if let cachedMovieDetails = cacheManager.loadMovieDetailsFromCache(forMovieID: movieID) {
+            movieDetails = cachedMovieDetails
+            print("movieDetails=", movieDetails?.title ?? "")
+            print("cachedMovieDetails")
+        } else {
+            getMovieDetails()
+        }
+    }
+    
     private func getMovieDetails() {
+        isLoading = true
         let response: AnyPublisher<MovieDetailsModel, APIError> = movieDetailsService.getMovieDetails(movieID: movieID)
         response
             .sink(receiveCompletion: onReceiveFailure, receiveValue: onReceiveMovieDetailsModelResponse)
@@ -37,12 +50,16 @@ extension MovieDetailsViewModel {
     private func onReceiveFailure(_ completion: Subscribers.Completion<APIError>) {
         if case let .failure(error) = completion {
             print("err=",error)
+            isLoading = false
         }
     }
     
     private func onReceiveMovieDetailsModelResponse(_ response: MovieDetailsModel) {
         movieDetails = response
+        guard movieDetails != nil else {return}
+        cacheManager.saveMovieDetailsToCache(movieDetails!, forMovieID: movieID)
         print("movieDetails", movieDetails?.title ?? "")
+        isLoading = false
     }
 }
 

@@ -23,13 +23,15 @@ struct MovieGridView: View {
         LazyVGrid(columns: gridItemLayoutSingle, spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 if viewModel.movieImageValue != nil {
-                    Image(viewModel.posterPlaceholderValue)
-                        .resizable()
-                        .frame(height: viewModel.movieImageValue == nil ? 150 : 0)
-                    
                     KFImage(viewModel.movieImageValue)
+                        .placeholder {
+                            Image(viewModel.posterPlaceholderValue)
+                                .resizable()
+                                .frame(height: 250)
+                                .clipped()
+                                .contentShape(Rectangle())
+                        }
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
                         .frame(height: 250)
                         .clipped()
                         .contentShape(Rectangle())
