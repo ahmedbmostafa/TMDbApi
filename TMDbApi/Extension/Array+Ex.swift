@@ -10,6 +10,15 @@ import Foundation
 extension Array {
     func uniqued<T: Hashable>(by keyPath: KeyPath<Element, T>) -> [Element] {
         var seen = Set<T>()
-        return filter { seen.insert($0[keyPath: keyPath]).inserted }
+        var duplicates = [T]()
+        return filter { element in
+            let value = element[keyPath: keyPath]
+            if !seen.insert(value).inserted {
+                duplicates.append(value)
+                print("Duplicate ID found: \(value)")
+                return false
+            }
+            return true
+        }
     }
 }

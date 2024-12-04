@@ -21,7 +21,7 @@ class TrendingMoviesViewModel: ObservableObject {
     @Published var selectedGenreID: Int? = nil
     @Published var pageNumber = 1
     @Published var isPagination = true
-    private let responsePerPage = 20
+    private let responsePerPage = 10
     let cacheManager: CacheManager!
     private let genresCacheKey = "genres"
     private let trendingMoviesCacheKey = "trendingMovies"
@@ -78,15 +78,15 @@ extension TrendingMoviesViewModel {
 
 extension TrendingMoviesViewModel {
     func loadMoreMovies(currentMovie: TrendingMovieModel) {
-        guard trendingMovies.count >= responsePerPage else {return}
-        guard let index = trendingMovies.firstIndex(where: { ($0.id) == (currentMovie.id) }) else {return}
-        if index == trendingMovies.count-1 && isPagination == true {
+        guard trendingMovies.count >= responsePerPage else { return }
+        guard let index = trendingMovies.firstIndex(where: { $0.id == currentMovie.id }) else { return }
+        if index == trendingMovies.count - 10 && isPagination {
             let uniqueMovies = trendingMovies.uniqued(by: \.id)
-            let calculatedPage = (uniqueMovies.count / responsePerPage) + 1
-            if pageNumber != calculatedPage {
-                pageNumber = calculatedPage
+            let calculatedPage = (uniqueMovies.count + responsePerPage - 1) / responsePerPage
+            if pageNumber < calculatedPage {
+                pageNumber += 1
+                getTrendingMovies()
             }
-            getTrendingMovies()
         }
     }
     

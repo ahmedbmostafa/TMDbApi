@@ -11,12 +11,9 @@ extension String {
     var releaseYear: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        // Convert the string into a Date object
         if let date = dateFormatter.date(from: self) {
-            // Extract the year using Calendar
             let year = Calendar.current.component(.year, from: date)
-            return String(year) // Convert the year to a string
+            return String(year)
         }
         return "N/A"
     }
